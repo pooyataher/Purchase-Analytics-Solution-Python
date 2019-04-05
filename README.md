@@ -27,7 +27,7 @@ Before designing a bunch of data structures for each table, we tried to think of
 
 ## Scalability
 
-Since there are only so many departments, we can sort the report table based on departments really fast in the end.  But as we create and update the report table, we need to search the report table many times -- once for each product of which there are tens of thousands.  So to reduce the time complexity of search, we better use a hash table for report table.  So we use a Python dictionary to store the report table.
+Since there are no more than a few dozen departments, we can sort the report table based on departments really fast in the end.  But as we create and update the report table, we need to search the report table many times -- once for each product of which there are tens of thousands.  So to reduce the time complexity of search, we better use a hash table for report table.  So we use a Python dictionary to store the report table.
 
 We use a hash table (a Python dictionary) to store the order_product tables as well.  Because for each product (of which there are tens of thousands), we need to search the product in the order_product table which may contain tens of millions of orders.
 
