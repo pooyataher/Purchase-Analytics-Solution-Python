@@ -6,7 +6,7 @@ When thinking about how to solve this problem, we like to think of our three com
 
 ![three tables](tables.png)
 
-We first go over `order_products` table row by row, read the `product_id` and look for the `product_id` in `products` table.  We could do this the other way around, but we prefer to first go over the longer table *row by row* and then *search* in the shorter table.  Searching can be computationally expensive, so we prefer to search the shorter table rather then the longer one.  Notice that `order_products` table can have tens of millions rows while `products` table has tens of thousands rows.  We will perform a high number searches each of which done relatively fast.
+We first go over `order_products` table row by row, read the `product_id` and look for the `product_id` in `products` table.  We could do this the other way around, but we prefer to first go over the longer table *row by row* and then *search* in the shorter table.  Searching can be computationally expensive, so we prefer to search the shorter table rather then the longer one.  Notice that `order_products` table can have tens of millions rows while `products` table tend to have no more than tens of thousands rows.  We will perform a high number searches each of which done relatively fast.
 
 ## Algorithm
 
