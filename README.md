@@ -31,7 +31,7 @@ Since there are no more than a few dozen departments, we can sort the report tab
 
 We use a hash table (a Python dictionary) to store the order_product tables as well.  Because for each product (of which there are tens of thousands), we need to search the product in the order_product table which may contain tens of millions of orders.
 
-A Python dictionary uses hash map techniques to achieve constant time complexity, O(1), to search for a key (or a value).
+A Python dictionary uses hash map techniques to achieve (almost) constant time complexity, O(1), to search for a key (or a value).  That is, the search complexity would be (almost) independent of the number of elements in the dictionary.
 
 
 
