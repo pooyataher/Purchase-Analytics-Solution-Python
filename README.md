@@ -23,7 +23,11 @@ We first go over `order_products` table row by row, read the `product_id` and lo
 
 ## Design
 
-Before designing a bunch of data structures for each table, we tried to think of *abstract data types* that our program can utilize.  We also tried to think of any abstractions that could cover common attributes of those data types.  Since each data structure is so simple (each has about a couple instance variables), there seems to be no common attributes between them.  So we do *not* need to design a class hierarchy using an *abstract class*.
+Before designing a bunch of data structures for each table, we tried to think of *abstract data types* that our program can utilize.  We also tried to think of any abstractions that could cover common attributes of those data types.
+
+For products table we used a dictionary of `product_id: dept_id` pairs so that we can find any `product_id` in the table as fast as possible (look at [Scalability](README.md#scalability) for a discussion on the tradeoff involved).
+
+Since each data structure is so simple (each has about a couple instance variables), there seems to be no common attributes between them.  So we do *not* need to design a class hierarchy using an *abstract class*.
 
 ## Scalability
 
