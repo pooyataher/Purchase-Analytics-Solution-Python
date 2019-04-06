@@ -10,16 +10,16 @@ We first go over `order_products` table row by row, read the `product_id` and lo
 
 ## Algorithm
 
-    For each row in order-products table:
-        Read the product-id and `reordered` value
-        In products table, find the department-id associated with the product-id
-        In report table, find the row associated with the department-id
-            If department-id doesn't exist, create a row for it
-            Increment number-of-orders
+    For each row in order_products table:
+        Read the product_id and `reordered` value
+        In products table, find the dept_id associated with the product_id
+        In report table, find the row associated with the dept_id
+            If dept_id doesn't exist, create a row for it
+            Increment number_of_orders
             If `reordered` is 0
-                Increment number-of-first-orders
+                Increment number_of_first_orders
     Compute ratio for each row in report table
-    Sort report table based on department-id
+    Sort report table based on dept_id
 
 ## Design
 
