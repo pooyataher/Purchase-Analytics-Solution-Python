@@ -6,7 +6,7 @@ When thinking about how to solve this problem, we like to think of our three com
 
 ![three tables](tables.png)
 
-We first go over `order_products` table row by row, read the `product_id` and look for the `product_id` in `products` table.  We could do this the other way around, but we prefer to first go over the longer table *row by row* and then *search* in the shorter table.  Searching can be computationally expensive, so we prefer to search the shorter table rather then the longer one.  Notice that `order_products` table can have tens of millions rows while `products` table tend to have no more than tens of thousands rows.  We will perform a high number searches each of which will be relatively fast.
+We first go over `order_products` table row by row, read the `product_id` and look for the `product_id` in `products` table.  We could do this the other way around, but we prefer to first go over the longer table *row by row* and then *search* in the shorter table.  Searching can be computationally expensive, so we prefer to search the shorter table rather then the longer one, although it comes at the cost of searching many more time (look at [Scalability](README.md#scalability)).  Notice that `order_products` table can have tens of millions rows while `products` table tend to have no more than tens of thousands rows.  We will perform a high number searches each of which will be relatively fast.
 
 ## Algorithm
 
@@ -25,9 +25,17 @@ We first go over `order_products` table row by row, read the `product_id` and lo
 
 Before designing a bunch of data structures for each table, we tried to think of *abstract data types* that our program can utilize.  We also tried to think of any abstractions that could cover common attributes of those data types.
 
-For products table we used a dictionary of `product_id: dept_id` pairs so that we can find any `product_id` in the table as fast as possible (look at [Scalability](README.md#scalability) for a discussion on the tradeoff involved).
+We used a dictionary of `product_id: dept_id` pairs to represent the products table because we like to search any `product_id` as fast as possible.  We need to search the products table for potentially millions of `product_id` s (look at [Scalability](README.md#scalability) for a discussion on the tradeoff involved).
+
+Similarly, as we need to 
 
 Since each data structure is so simple (each has about a couple instance variables), there seems to be no common attributes between them.  So we do *not* need to design a class hierarchy using an *abstract class*.
+
+The only useful abstractions we could think of are the following:
+
+1. `products` which keeps track of a collection of products.
+2. `dept` which represents the four variables that interests us about a department.
+3. `depts` which keeps track of a collection of `dept`s.
 
 ## Scalability
 
