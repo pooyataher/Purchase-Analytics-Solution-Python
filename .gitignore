@@ -1,2 +1,8 @@
 *~
 __pycache__
+*COPY*
+results.txt
+temp
+run_src.sh
+run_src_unit_tests.sh
+TODO.org
