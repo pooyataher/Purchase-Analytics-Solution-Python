@@ -27,6 +27,9 @@ def load_csv(fname, left, right):
         prod_reader = csv.reader(csvfile)
         for row in prod_reader:
             depts[row[left]] = row[right]  # str keys are the fastest
+        if depts == {}:
+            raise ValueError('The file is either empty or not in CSV format: '
+                             + fname)
     return depts
 
 

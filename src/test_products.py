@@ -1,5 +1,5 @@
-import products
 import unittest
+import products
 
 
 class Test_products(unittest.TestCase):
@@ -10,12 +10,28 @@ class Test_products(unittest.TestCase):
         infname1 = '../insight_testsuite/tests/test_1/input/products.csv'
         infname2 = '../insight_testsuite/tests/test_2/input/products.csv'
         self.infname = [infname1, infname2]
+        # The file has fewer columns (< 4) than expected
+        self.infname3 = '../insight_testsuite/tests/test_3/input/products.csv'
+        # The file does not exist
+        self.infname4 = '../insight_testsuite/tests/test_4/input/products.csv'
+
+    def test_remove_header(self):
+        with open(self.infname[0], newline='') as inf1, \
+             open(self.infname[1], newline='') as inf2:
+                out = inf2.read()
+                inf2.seek(0)
+                for inf in [inf1, inf2]:
+                    self.assertEqual(products.remove_header(inf).read(), out)
 
     def test_load_csv(self):
         output = {'104': '13', '35': '12', '91': '16', '83': '4',
                   '112': '3', '86': '16', '19': '13', '93': '3'}
         for infname in self.infname:
             self.assertEqual(products.load_csv(infname, 2, 3), output)
+        with self.assertRaises(IndexError):
+            products.load_csv(self.infname3, 2, 3)
+        with self.assertRaises(FileNotFoundError):
+            products.load_csv(self.infname4, 2, 3)
 
     def test_load_prod_table(self):
         output = {'9327': '13', '17461': '12', '17668': '16', '28985': '4',
