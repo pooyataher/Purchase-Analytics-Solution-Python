@@ -17,7 +17,7 @@ We first go over `order_products` table row by row, read the `product_id` and lo
         Read the product_id and `reordered` value
         In products table, find the dept_id associated with the product_id
         In report table, find the row associated with the dept_id
-            If department-id doesn't exist, create a row for it and set number-of-orders to 1
+            If dept_id doesn't exist, create a row for it and set number-of-orders to 1
             Otherwise, just increment number-of-orders
             If `reordered` is 0
                 Increment number_of_first_orders
