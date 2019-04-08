@@ -1,4 +1,4 @@
-# Products table module
+# Utilities for loading CSV files
 
 import csv
 
@@ -14,8 +14,9 @@ def remove_header(csvf):
     return csvf
 
 
-def load_prod_table(fname):
-    """Assumes fname is a CSV file containing a products table
+def load_csv(fname, left, right):
+    """Assumes fname is a CSV file name, left is index of first field of
+    interest, and right is the second filed of interest
     Returns a dictionary of product_id: dept_id pairs
     Be careful not to mutate the dictionary returned by this method"""
     depts = {}
@@ -23,17 +24,12 @@ def load_prod_table(fname):
         csvfile = remove_header(csvfile)
         prod_reader = csv.reader(csvfile)
         for row in prod_reader:
-            depts[row[0]] = row[3]
+            depts[row[left]] = row[right]
     print(depts)
     return depts
 
 
-class Products(object):
-    """Keeps track of product_id and its associated dept_id for a collection
-    of products"""
-    # Represents a table of products by using a dictionary of
-    # product_id: dept_id pairs so that we can find dept_id associated with a
-    # particular product_id really fast
-
-    def __init__(self, filename):
-        self.depts = load_prod_table(filename)
+def load_prod_table(csv_fname):
+    """wrapper function for load_csv when reading the product.csv"""
+    left_col, right_col = 0, 3
+    return load_csv(csv_fname, left_col, right_col)
