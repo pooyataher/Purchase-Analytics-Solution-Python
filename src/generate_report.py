@@ -21,9 +21,7 @@ print(args)
 order_prod_filename, prod_filename, report_filename = args
 
 # load products table
-prod_table = products.Products()
-# print(prod_table.load_products(prod_filename))
-print(prod_table.load_products(prod_filename))
+prod_table = products.Products(prod_filename)
 
 print("__name__ == '__main__' is", __name__ == '__main__')
 print("Done!")

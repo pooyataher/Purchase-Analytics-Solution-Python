@@ -14,6 +14,20 @@ def remove_header(csvf):
     return csvf
 
 
+def load_prod_table(fname):
+    """Assumes fname is a CSV file containing a products table
+    Returns a dictionary of product_id: dept_id pairs
+    Be careful not to mutate the dictionary returned by this method"""
+    depts = {}
+    with open(fname, newline='') as csvfile:
+        csvfile = remove_header(csvfile)
+        prod_reader = csv.reader(csvfile)
+        for row in prod_reader:
+            depts[row[0]] = row[3]
+    print(depts)
+    return depts
+
+
 class Products(object):
     """Keeps track of product_id and its associated dept_id for a collection
     of products"""
@@ -21,16 +35,5 @@ class Products(object):
     # product_id: dept_id pairs so that we can find dept_id associated with a
     # particular product_id really fast
 
-    def __init__(self):
-        self.products = {}
-
-    def load_products(self, filename):
-        """Assumes filename is a CSV file containing a products table
-        Returns a dictionary of product_id: dept_id pairs
-        Be careful not to mutate the dictionary returned by this method"""
-        with open(filename, newline='') as csvfile:
-            csvfile = remove_header(csvfile)
-            prod_reader = csv.reader(csvfile)
-            for row in prod_reader:
-                self.products[row[0]] = row[3]
-        return self.products
+    def __init__(self, filename):
+        self.depts = load_prod_table(filename)
