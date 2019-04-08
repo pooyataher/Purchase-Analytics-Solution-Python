@@ -52,4 +52,4 @@ We used `str` keys in our dictionary because it leads to the fastest performance
 
 ## Test
 
-*Integration test* had already been set up in `insight_testsuite/run_tests.sh`.  We just added more test cases in `insight_testsuite/tests/`.  We also wrote *unit tests* using the standard Python framework `unittest`.
+*Integration test* had already been set up in `insight_testsuite/run_tests.sh`.  We just added more test cases in `insight_testsuite/tests/`.  We also wrote *unit tests* using the standard Python test framework `unittest`.
