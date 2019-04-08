@@ -17,8 +17,8 @@ We first go over `order_products` table row by row, read the `product_id` and lo
         Read the product_id and `reordered` value
         In products table, find the dept_id associated with the product_id
         In report table, find the row associated with the dept_id
-            If dept_id doesn't exist, create a row for it and set number_of_orders to 1
-            Otherwise, just increment number_of_orders
+            If dept_id exists, just increment number_of_orders
+            Otherwise, create a row for it and set number_of_orders to 1
             If `reordered` is 0
                 Increment number_of_first_orders
     Compute ratio for each row in report table
