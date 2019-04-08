@@ -1,6 +1,6 @@
 # Solution to Purchase-Analytics in Python
 
-A solution to the (Purchase Analytics)[https://github.com/InsightDataScience/Purchase-Analytics] challenge in Python.
+A solution to the [Purchase Analytics](https://github.com/InsightDataScience/Purchase-Analytics) challenge in Python.
 
 
 ## Approach
