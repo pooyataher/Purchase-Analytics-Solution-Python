@@ -19,13 +19,14 @@ def load_csv(fname, left, right):
     interest, and right is the second filed of interest
     Returns a dictionary of product_id: dept_id pairs
     Be careful not to mutate the dictionary returned by this method"""
+    # Notice that str keys are the fastest, according to Python wiki:
+    # https://wiki.python.org/moin/TimeComplexity
     depts = {}
     with open(fname, newline='') as csvfile:
         csvfile = remove_header(csvfile)
         prod_reader = csv.reader(csvfile)
         for row in prod_reader:
-            depts[row[left]] = row[right]
-    print(depts)
+            depts[row[left]] = row[right]  # str keys are the fastest
     return depts
 
 
