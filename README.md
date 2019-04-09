@@ -41,9 +41,9 @@ Similarly, as we need to search report table for millions of `dept_id` s, we use
 
 ## Scalability
 
-Since there are no more than a few dozen departments, we can sort the report table based on departments really fast in the end--right before generating a report.  But as we create and update the report table, we need to search the report table many times -- once for each product of which there are tens of thousands.  So to reduce the time complexity of search, we better use a hash table for report table.  So we use a Python dictionary to store the report table.
+Since there are no more than a few dozen departments, we can sort the report table based on `dept_id` really fast in the end--right before generating a report.  But as we create and update the report table, we need to search the report table many times -- once for each product of which there are tens of thousands.  So to reduce the time complexity of search, we better use a hash table for report table.  So we use a Python dictionary to store the report table.
 
-We use a hash table (a Python dictionary) to store the order_product tables as well.  Because for each product (of which there are tens of thousands), we need to search the product in the order_product table which may contain tens of millions of orders.
+We also use a hash table (a Python dictionary) to store the products tables as well because for each order (of which there are tens of millions), we need to search for the `prod_id` in the products table which may contain tens of thousands of products.
 
 A Python dictionary uses hash map techniques to achieve (almost) constant time complexity, O(1), to search for a key (or a value).  That is, the search complexity would be (almost) independent of the number of elements in the dictionary.
 
@@ -62,3 +62,7 @@ To run *integration tests*, change directory to `insight_testsuite/run_tests.sh`
 To run *unit tests*, change directory to the main directory of the project and issue the following:
 
     ./run_unit_tests.sh
+
+## TODO
+
+This program may crash for input files that are not in proper CSV format.  So we need to add some `try-except` statement especially in `remove_header` function in `products` module.
