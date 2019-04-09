@@ -48,7 +48,7 @@ We use a hash table (a Python dictionary) to store the order_product tables as w
 
 A Python dictionary uses hash map techniques to achieve (almost) constant time complexity, O(1), to search for a key (or a value).  That is, the search complexity would be (almost) independent of the number of elements in the dictionary.
 
-We used `str` keys in our dictionary because it leads to the fastest performance--according to Python time complexity wiki (page)[https://wiki.python.org/moin/TimeComplexity].
+We used `str` keys in our dictionary because it leads to the fastest performance--according to Python time complexity wiki [page](https://wiki.python.org/moin/TimeComplexity).
 
 ## Test
 
