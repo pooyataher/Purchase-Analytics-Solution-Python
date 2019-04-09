@@ -2,6 +2,11 @@
 
 A solution to the [Purchase Analytics](https://github.com/InsightDataScience/Purchase-Analytics) challenge in Python.
 
+## Run Code
+
+On a Linux machine, change directory to the main directory of this project and type the following at the command line:
+
+    ./run.sh
 
 ## Approach
 
@@ -48,8 +53,18 @@ We use a hash table (a Python dictionary) to store the order_product tables as w
 
 A Python dictionary uses hash map techniques to achieve (almost) constant time complexity, O(1), to search for a key (or a value).  That is, the search complexity would be (almost) independent of the number of elements in the dictionary.
 
-We used `str` keys in our dictionary because it leads to the fastest performance--according to Python time complexity wiki [page](https://wiki.python.org/moin/TimeComplexity).
+We used `str` keys in our dictionary because it leads to the fastest performance--according to this Python time complexity wiki [page](https://wiki.python.org/moin/TimeComplexity).
 
 ## Test
 
 *Integration test* had already been set up in `insight_testsuite/run_tests.sh`.  We just added more test cases in `insight_testsuite/tests/`.  We also wrote *unit tests* using the standard Python test framework `unittest`.
+
+## Run Tests
+
+To run *integration tests*, change directory to `insight_testsuite/run_tests.sh` and issue the following:
+
+    ./run_tests.sh
+
+To run *unit tests*, change directory to the main directory of the project and issue the following:
+
+    ./run_unit_tests.sh
