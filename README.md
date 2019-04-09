@@ -14,36 +14,30 @@ When thinking about how to solve this problem, we like to think of our three com
 
 ![three tables](tables.png)
 
-We first go over `order_products` table row by row, read the `product_id` and look for the `product_id` in `products` table.  We could do this the other way around, but we prefer to first go over the longer table *row by row* and then *search* in the shorter table.  Searching can be computationally expensive, so we prefer to search the shorter table rather then the longer one, although it comes at the cost of searching many more time (look at [Scalability](README.md#scalability)).  Notice that `order_products` table can have tens of millions rows while `products` table tend to have no more than tens of thousands rows.  We will perform a high number searches each of which will be relatively fast.
+We first go over `order_products` table row by row, read the `product_id` and look for the `product_id` in `products` table.  We could do this the other way around, but we prefer to first go over the longer table *row by row* and then *search* in the shorter table.  Searching can be computationally expensive, so we prefer to search the shorter table rather then the longer one, although it comes at the cost of searching many more time (see [Scalability](README.md#scalability) section).  Notice that `order_products` table can have tens of millions of rows while `products` table tend to have no more than tens of thousands of rows.  Therefore, we will perform a high number of searches, but each test can be really fast.
 
 ## Algorithm
 
     For each row in order_products table:
-        Read the product_id and `reordered` value
+        Read the product_id and 'reordered' value
         In products table, find the dept_id associated with the product_id
         In report table, find the row associated with the dept_id
-            If dept_id exists, just increment number_of_orders
-            Otherwise, create a row for it and set number_of_orders to 1
-            If `reordered` is 0
+            If the row already exists, just increment number_of_orders
+            Otherwise, create a row for that dept_id and set number_of_orders to 1
+            If 'reordered' is 0
                 Increment number_of_first_orders
-    Compute ratio for each row in report table
     Sort report table based on dept_id
+    Compute percentage for each row in report table
 
 ## Design
 
 Before designing a bunch of data structures for each table, we tried to think of *abstract data types* that our program can utilize.  We also tried to think of any abstractions that could cover common attributes of those data types.
 
+However, since each data structure is so simple (each has about a couple instance variables), there seems to be no common attributes between them.  So we do *not* need to design a class hierarchy using an *abstract class*.  Instead, we directly used Python built-in data structures.
+
 We used a dictionary of `product_id: dept_id` pairs to represent the products table because we like to search any `product_id` as fast as possible.  We need to search the products table for potentially millions of `product_id` s (look at [Scalability](README.md#scalability) for a discussion on the tradeoff involved).
 
-Similarly, as we need to 
-
-Since each data structure is so simple (each has about a couple instance variables), there seems to be no common attributes between them.  So we do *not* need to design a class hierarchy using an *abstract class*.
-
-The only useful abstractions we could think of are the following:
-
-1. `products` which keeps track of a collection of products.
-2. `dept` which represents the four variables that interests us about a department.
-3. `depts` which keeps track of a collection of `dept`s.
+Similarly, as we need to search report table for millions of `dept_id` s, we use a dictionary of `dept_id: dept_spec` pairs to represent the report table, where `dept_spec` is a *list* of `number_of_orders`, `number_of_first_orders`, and `percentage`.
 
 ## Scalability
 
