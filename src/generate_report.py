@@ -42,18 +42,15 @@ with open(order_prod_filename, newline='') as ord_file:
         if reordered == '0':
             dept_spec[1] += 1
 
-with open(report_filename, 'w', newline='') as csv_report:
-    report = csv.writer(csv_report)
+with open(report_filename, 'w') as report:
+    report.write('department_id,number_of_orders,\
+number_of_first_orders,percentage\n')
     for key in sorted(report_table):
         dept_row = report_table[key]
         num_orders, num_first_orders = dept_row[0], dept_row[1]
-        dept_row[2] = num_first_orders / num_orders
-        report.writerow([key] + dept_row)
-
-print(sorted(report_table))
+        percent = num_first_orders / num_orders
+        report.write(str(key) + ',' + str(num_orders) + ',' +
+                     str(num_first_orders) + ',' + format(percent, '.2f') +
+                     '\n')
 
 print("Done!")
-
-# print('first argument:', args[0])
-
-# # open order_products.csv
