@@ -24,6 +24,9 @@ class Test_products(unittest.TestCase):
                   '112': '3', '86': '16', '19': '13', '93': '3'}
         for infname in self.infname:
             self.assertEqual(products.load_csv(infname, 2, 3), output)
+        infname3 = '../insight_testsuite/tests/test_3/input/products.csv'
+        with self.assertRaises(IOError):
+            products.load_csv(open(infname3), newline='')
 
     def test_load_prod_table(self):
         output = {'9327': '13', '17461': '12', '17668': '16', '28985': '4',

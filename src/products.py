@@ -22,14 +22,17 @@ def load_csv(fname, left, right):
     # Notice that str keys are the fastest, according to Python wiki:
     # https://wiki.python.org/moin/TimeComplexity
     depts = {}
+    # try:
     with open(fname, newline='') as csvfile:
         csvfile = remove_header(csvfile)
         prod_reader = csv.reader(csvfile)
         for row in prod_reader:
             depts[row[left]] = row[right]  # str keys are the fastest
-        if depts == {}:
-            raise ValueError('The file is either empty or not in CSV format: '
-                             + fname)
+        # if depts == {}:
+        #     raise ValueError('The file is either empty or not in CSV format: '
+        #                      + fname)
+    # except IOError:
+    #     raise ValueError("Error when opening the file:")
     return depts
 
 
