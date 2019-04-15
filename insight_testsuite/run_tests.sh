@@ -61,13 +61,21 @@ function compare_outputs {
   PROJECT_ANSWER_PATH1=${GRADER_ROOT}/temp/output/${OUTPUT_FILENAME}
   TEST_ANSWER_PATH1=${GRADER_ROOT}/tests/${test_folder}/output/${OUTPUT_FILENAME}
 
-  DIFF_RESULT1=$(diff -bB ${PROJECT_ANSWER_PATH1} ${TEST_ANSWER_PATH1} | wc -l)
-  if [ "${DIFF_RESULT1}" -eq "0" ] && [ -f ${PROJECT_ANSWER_PATH1} ]; then
-    echo -e "[${color_green}PASS${color_norm}]: ${test_folder} ${OUTPUT_FILENAME}"
+  if [ ! -f ${TEST_ANSWER_PATH1} ] && [ ! -f ${PROJECT_ANSWER_PATH1} ]; then
+    echo -e "[${color_green}PASS${color_norm}]: ${test_folder} no output created as input was missing"
     NUM_OUTPUT_FILES_PASSED=$(($NUM_OUTPUT_FILES_PASSED+1))
   else
-    echo -e "[${color_red}FAIL${color_norm}]: ${test_folder}"
-    diff ${PROJECT_ANSWER_PATH1} ${TEST_ANSWER_PATH1}
+
+    DIFF_RESULT1=$(diff -bB ${PROJECT_ANSWER_PATH1} ${TEST_ANSWER_PATH1} | wc -l)
+
+    if [ "${DIFF_RESULT1}" -eq "0" ] && [ -f ${PROJECT_ANSWER_PATH1} ]; then
+      echo -e "[${color_green}PASS${color_norm}]: ${test_folder} ${OUTPUT_FILENAME}"
+      NUM_OUTPUT_FILES_PASSED=$(($NUM_OUTPUT_FILES_PASSED+1))
+    else
+      echo -e "[${color_red}FAIL${color_norm}]: ${test_folder}"
+      diff ${PROJECT_ANSWER_PATH1} ${TEST_ANSWER_PATH1}
+    fi
+
   fi
 
   if [ "${NUM_OUTPUT_FILES_PASSED}" -eq "1" ]; then
