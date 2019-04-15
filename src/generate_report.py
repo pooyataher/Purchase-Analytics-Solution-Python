@@ -21,9 +21,12 @@ checks.check_num_args(args)
 order_prod_filename, prod_filename, report_filename = args
 
 # load products table
+# try:
 prod_table = products.load_prod_table(prod_filename)
+# except TypeError:
 
 report_table = {}
+num_removed_lines = 0
 
 with open(order_prod_filename, newline='') as ord_file:
     ord_file = products.remove_header(ord_file)
@@ -32,6 +35,11 @@ with open(order_prod_filename, newline='') as ord_file:
         prod_id = row[1]
         reordered = row[3]
         dept_id = int(prod_table[prod_id])
+
+        if reordered != '0' and reordered != '1':
+            num_removed_lines += 1
+            continue
+
         # Two lookups in the dictionary for each key
         if dept_id in report_table:  # first lookup for all cases
             dept_spec = report_table[dept_id]  # second lookup
@@ -39,6 +47,7 @@ with open(order_prod_filename, newline='') as ord_file:
         else:
             dept_spec = [1, 0, 0.0]
             report_table[dept_id] = dept_spec  # second lookup
+
         if reordered == '0':
             dept_spec[1] += 1
 
@@ -53,4 +62,4 @@ number_of_first_orders,percentage\n')
                      str(num_first_orders) + ',' + format(percent, '.2f') +
                      '\n')
 
-print("Done!")
+print(num_removed_lines, 'lines removed from order_products table.')
