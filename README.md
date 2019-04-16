@@ -12,7 +12,7 @@ This reads the data files from `input` directory and writes a report file in the
 
 ## Approach
 
-When thinking about how to solve this problem, we like to think of our three comma separated files as tables.  So we have three tables;  two input tables which are order_products table and products table, and one report table.  To gain a clear understanding of our approach, we imagine each table containing only the fields required to tackle our specific problem. 
+When thinking about how to solve this problem, we like to think of our three CSV files as tables.  So we have three tables;  two input tables which are order_products table and products table, and one report table.  To gain a clear understanding of our approach, we imagine each table containing only the fields required to tackle our specific problem. 
 
 ![three tables](tables.png)
 
@@ -45,7 +45,7 @@ Similarly, as we need to search report table for millions of `dept_id` s, we use
 
 Since there are no more than a couple dozen departments, we can sort the report table based on `dept_id` really fast in the end--right before generating a report.  But as we create and update the report table, we need to search the report table many times -- once for each product of which there are tens of thousands.  So to reduce the time complexity of search, we better use a hash table for report table.  So we use a Python dictionary to store the report table.
 
-We also use a hash table (a Python dictionary) to store the products tables because for each order (of which there are tens of millions), we need to search for the `prod_id` in the products table which may contain tens of thousands of products.
+We also use a Python dictionary to store the products table because for each order (of which there are tens of millions), we need to search for the `prod_id` in the products table which may contain tens of thousands of products.
 
 A Python dictionary uses hash map techniques to achieve (almost) constant time complexity, O(1), to search for a key (or a value).  That is, the search complexity would be (almost) independent of the number of elements in the dictionary.
 
@@ -69,4 +69,4 @@ To run *unit tests*, change directory to the main directory of the project and i
 
 ## Exception Handling
 
-The program strives to handle any type of missing or corrupt input data.  It will print messages in standard output if any such exceptions happens.
+The program strives to handle any type of missing or corrupt input data.  It will print messages in standard output if any such exception happens.
