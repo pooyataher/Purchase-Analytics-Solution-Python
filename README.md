@@ -35,7 +35,7 @@ We first go over `order_products` table row by row, read the `product_id` and lo
 
 Before designing a bunch of data structures for each table, we tried to think of *abstract data types* that our program can utilize.  We also tried to think of any abstractions that could cover common attributes of those data types.
 
-However, since each data structure is so simple (each has about a couple instance variables), there seems to be no common attributes between them.  So we do *not* need to design a class hierarchy using an *abstract class*.  Instead, we directly used Python built-in data structures.
+However, since each data structure is so simple (each has about a couple of instance variables), there seems to be no common attributes between them.  So we do *not* need to design a class hierarchy using an *abstract class*.  Instead, we directly used Python built-in data structures.
 
 We used a dictionary of `product_id: dept_id` pairs to represent the products table because we like to search any `product_id` as fast as possible.  We need to search the products table for potentially millions of `product_id` s (look at [Scalability](README.md#scalability) for a discussion on the tradeoff involved).
 
@@ -43,7 +43,7 @@ Similarly, as we need to search report table for millions of `dept_id` s, we use
 
 ## Scalability
 
-Since there are no more than a couple dozen departments, we can sort the report table based on `dept_id` really fast in the end--right before generating a report.  But as we create and update the report table, we need to search the report table many times -- once for each product of which there are tens of thousands.  So to reduce the time complexity of search, we better use a hash table for report table.  So we use a Python dictionary to store the report table.
+Since there are no more than a couple of dozen departments, we can sort the report table based on `dept_id` really fast in the end--right before generating a report.  But as we create and update the report table, we need to search the report table many times -- once for each product of which there are tens of thousands.  So to reduce the time complexity of search, we better use a hash table for report table.  So we use a Python dictionary to store the report table.
 
 We also use a Python dictionary to store the products table because for each order (of which there are tens of millions), we need to search for the `prod_id` in the products table which may contain tens of thousands of products.
 
@@ -69,4 +69,4 @@ To run *unit tests*, change directory to the main directory of the project and i
 
 ## Exception Handling
 
-The program strives to handle any type of missing or corrupt input data.  It will print messages in standard output if any such exception happens.
+The program strives to handle any type of missing or corrupt input data.  It will print messages in standard output if any such exception happens.  If only the `reordered` value is missing in the order_products table, then that entry is counted in the total number of orders for that product.
