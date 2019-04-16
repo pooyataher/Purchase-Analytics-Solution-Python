@@ -7,6 +7,8 @@ A solution to the [Purchase Analytics](https://github.com/InsightDataScience/Pur
 On a Linux machine, change directory to the main directory of this project and type the following at the command line:
 
     ./run.sh
+	
+This reads the data files from `input` directory and writes a report file in the `output` directory.
 
 ## Approach
 
@@ -41,21 +43,23 @@ Similarly, as we need to search report table for millions of `dept_id` s, we use
 
 ## Scalability
 
-Since there are no more than a few dozen departments, we can sort the report table based on `dept_id` really fast in the end--right before generating a report.  But as we create and update the report table, we need to search the report table many times -- once for each product of which there are tens of thousands.  So to reduce the time complexity of search, we better use a hash table for report table.  So we use a Python dictionary to store the report table.
+Since there are no more than a couple dozen departments, we can sort the report table based on `dept_id` really fast in the end--right before generating a report.  But as we create and update the report table, we need to search the report table many times -- once for each product of which there are tens of thousands.  So to reduce the time complexity of search, we better use a hash table for report table.  So we use a Python dictionary to store the report table.
 
-We also use a hash table (a Python dictionary) to store the products tables as well because for each order (of which there are tens of millions), we need to search for the `prod_id` in the products table which may contain tens of thousands of products.
+We also use a hash table (a Python dictionary) to store the products tables because for each order (of which there are tens of millions), we need to search for the `prod_id` in the products table which may contain tens of thousands of products.
 
 A Python dictionary uses hash map techniques to achieve (almost) constant time complexity, O(1), to search for a key (or a value).  That is, the search complexity would be (almost) independent of the number of elements in the dictionary.
 
-We used `str` keys in our dictionary because it leads to the fastest performance--according to this Python time complexity wiki [page](https://wiki.python.org/moin/TimeComplexity).
+We used `str` keys in our dictionaries when possible because it leads to the fastest performance--according to this Python time complexity wiki [page](https://wiki.python.org/moin/TimeComplexity).
+
+We could have read the shorter products table row by row and searched in the larger order_products table for all instances of each `prod_id`, but the search could have been more time consuming, so we didn't use this approach.
 
 ## Test
 
-*Integration test* had already been set up in `insight_testsuite/run_tests.sh`.  We just added more test cases in `insight_testsuite/tests/`.  We also wrote *unit tests* using the standard Python test framework `unittest`.
+*Integration test* had already been set up in `insight_testsuite/run_tests.sh`.  We modified the Bash file `run_tests.sh` to account for cases where we do *not* need our program to create an output report.  We also added more test cases in `insight_testsuite/tests/`.  We also wrote *unit tests* using the standard Python test framework `unittest`.
 
 ## Run Tests
 
-To run *integration tests*, change directory to `insight_testsuite/run_tests.sh` and issue the following:
+To run *integration tests*, change directory to `insight_testsuite/` and issue the following:
 
     ./run_tests.sh
 
@@ -63,6 +67,6 @@ To run *unit tests*, change directory to the main directory of the project and i
 
     ./run_unit_tests.sh
 
-## TODO
+## Exception Handling
 
-This program may crash for input files that are not in proper CSV format.  So we need to add some `try-except` statement especially in `remove_header` function in `products` module.
+The program strives to handle any type of missing or corrupt input data.  It will print messages in standard output if any such exceptions happens.
