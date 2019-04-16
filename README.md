@@ -16,7 +16,7 @@ When thinking about how to solve this problem, we like to think of our three com
 
 ![three tables](tables.png)
 
-We first go over `order_products` table row by row, read the `product_id` and look for the `product_id` in `products` table.  We could do this the other way around, but we prefer to first go over the longer table *row by row* and then *search* in the shorter table.  Searching can be computationally expensive, so we prefer to search the shorter table rather then the longer one, although it comes at the cost of searching many more time (see [Scalability](README.md#scalability) section).  Notice that `order_products` table can have tens of millions of rows while `products` table tend to have no more than tens of thousands of rows.  Therefore, we will perform a high number of searches, but each test can be really fast.
+We first go over `order_products` table row by row, read the `product_id` and look for the `product_id` in `products` table.  We could do this the other way around, but we prefer to first go over the longer table *row by row* and then *search* in the shorter table.  Searching can be computationally expensive, so we prefer to search the shorter table rather then the longer one, although it comes at the cost of searching many more time (see [Scalability](README.md#scalability) section).  Notice that `order_products` table can have tens of millions of rows while `products` table tend to have no more than tens of thousands of rows.  Therefore, we will perform a high number of searches, but each search can be really fast.
 
 ## Algorithm
 
@@ -51,7 +51,7 @@ A Python dictionary uses hash map techniques to achieve (almost) constant time c
 
 We used `str` keys in our dictionaries when possible because it leads to the fastest performance--according to this Python time complexity wiki [page](https://wiki.python.org/moin/TimeComplexity).
 
-We could have read the shorter products table row by row and searched in the larger order_products table for all instances of each `prod_id`, but the search could have been more time consuming, so we didn't use this approach.
+We could have read the shorter products table row by row and searched in the larger order_products table for all instances of each `prod_id`, but then each search could have been more time consuming as we may have had too many collisions in our underlying hash table, so we didn't use this approach.
 
 ## Test
 
