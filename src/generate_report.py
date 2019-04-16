@@ -26,7 +26,6 @@ try:
     prod_table = products.load_prod_table(prod_filename)
 
     report_table = {}
-    num_ignored_lines = 0
     corrupt_reordered = False
     missing_prod_ids = []
 
@@ -48,7 +47,6 @@ try:
 
                 if reordered != '0' and reordered != '1':
                     corrupt_reordered = True
-                    num_ignored_lines += 1
                     continue
 
                 if reordered == '0':
@@ -56,7 +54,6 @@ try:
 
             except KeyError as msg:
                 missing_prod_ids.append(str(msg))
-                num_ignored_lines += 1
             except (ValueError, IndexError):
                 continue
 
