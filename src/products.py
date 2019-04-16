@@ -1,6 +1,6 @@
 # Utilities for loading CSV files
 
-import csv, sys
+import csv
 
 
 def remove_header(csvf):
@@ -12,12 +12,9 @@ def remove_header(csvf):
             csvf.readline()
         else:
             csvf.seek(0)
-        return csvf
     except csv.Error:
         raise IOError('Input file not in proper CSV format')
-    # except csv.Error as msg:
-    #     print("Input files not in proper CSV format:", msg)
-    #     # raise
+    return csvf
 
 
 def load_csv(fname, left, right):

@@ -27,6 +27,7 @@ try:
 
     report_table = {}
     num_ignored_lines = 0
+    missing_prod_ids = []
 
     with open(order_prod_filename, newline='') as ord_file:
         ord_file = products.remove_header(ord_file)
@@ -34,22 +35,26 @@ try:
         for row in ord_table:
             prod_id = row[1]
             reordered = row[3]
-            dept_id = int(prod_table[prod_id])
+            try:
+                dept_id = int(prod_table[prod_id])
+                if reordered != '0' and reordered != '1':
+                    num_ignored_lines += 1
+                    continue
 
-            if reordered != '0' and reordered != '1':
+                # Two lookups in the dictionary for each key
+                if dept_id in report_table:  # first lookup for all cases
+                    dept_spec = report_table[dept_id]  # second lookup
+                    dept_spec[0] += 1
+                else:
+                    dept_spec = [1, 0, 0.0]
+                    report_table[dept_id] = dept_spec  # second lookup
+
+                if reordered == '0':
+                    dept_spec[1] += 1
+
+            except KeyError as msg:
+                missing_prod_ids.append(str(msg))
                 num_ignored_lines += 1
-                continue
-
-            # Two lookups in the dictionary for each key
-            if dept_id in report_table:  # first lookup for all cases
-                dept_spec = report_table[dept_id]  # second lookup
-                dept_spec[0] += 1
-            else:
-                dept_spec = [1, 0, 0.0]
-                report_table[dept_id] = dept_spec  # second lookup
-
-            if reordered == '0':
-                dept_spec[1] += 1
 
     with open(report_filename, 'w') as report:
         report.write('department_id,number_of_orders,\
@@ -62,7 +67,13 @@ number_of_first_orders,percentage\n')
                          str(num_first_orders) + ',' + format(percent, '.2f') +
                          '\n')
 
-    print(num_ignored_lines, 'lines ignored from order_products table.')
+    print('')
+    if num_ignored_lines != 0:
+        print(num_ignored_lines, 'rows ignored in order_products table.')
+    if missing_prod_ids != []:
+        print('prod_ids', missing_prod_ids,
+              'in order_products table are missing from products table')
 
 except IOError as msg:
+    print('')
     print(msg)
