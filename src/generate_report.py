@@ -27,20 +27,17 @@ try:
 
     report_table = {}
     num_ignored_lines = 0
+    corrupt_reordered = False
     missing_prod_ids = []
 
     with open(order_prod_filename, newline='') as ord_file:
         ord_file = products.remove_header(ord_file)
         ord_table = csv.reader(ord_file)
         for row in ord_table:
-            prod_id = row[1]
-            reordered = row[3]
             try:
+                prod_id = row[1]
+                reordered = row[3]
                 dept_id = int(prod_table[prod_id])
-                if reordered != '0' and reordered != '1':
-                    num_ignored_lines += 1
-                    continue
-
                 # Two lookups in the dictionary for each key
                 if dept_id in report_table:  # first lookup for all cases
                     dept_spec = report_table[dept_id]  # second lookup
@@ -49,12 +46,19 @@ try:
                     dept_spec = [1, 0, 0.0]
                     report_table[dept_id] = dept_spec  # second lookup
 
+                if reordered != '0' and reordered != '1':
+                    corrupt_reordered = True
+                    num_ignored_lines += 1
+                    continue
+
                 if reordered == '0':
                     dept_spec[1] += 1
 
             except KeyError as msg:
                 missing_prod_ids.append(str(msg))
                 num_ignored_lines += 1
+            except (ValueError, IndexError):
+                continue
 
     with open(report_filename, 'w') as report:
         report.write('department_id,number_of_orders,\
@@ -68,8 +72,9 @@ number_of_first_orders,percentage\n')
                          '\n')
 
     print('')
-    if num_ignored_lines != 0:
-        print(num_ignored_lines, 'rows ignored in order_products table.')
+    if corrupt_reordered:
+        print('Output figures on number of first orders and percentage are NOT \
+accurate.')
     if missing_prod_ids != []:
         print('prod_ids', missing_prod_ids,
               'in order_products table are missing from products table')
