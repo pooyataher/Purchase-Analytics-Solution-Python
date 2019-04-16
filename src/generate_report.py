@@ -21,45 +21,48 @@ checks.check_num_args(args)
 order_prod_filename, prod_filename, report_filename = args
 
 # load products table
-# try:
-prod_table = products.load_prod_table(prod_filename)
-# except TypeError:
+try:
 
-report_table = {}
-num_removed_lines = 0
+    prod_table = products.load_prod_table(prod_filename)
 
-with open(order_prod_filename, newline='') as ord_file:
-    ord_file = products.remove_header(ord_file)
-    ord_table = csv.reader(ord_file)
-    for row in ord_table:
-        prod_id = row[1]
-        reordered = row[3]
-        dept_id = int(prod_table[prod_id])
+    report_table = {}
+    num_ignored_lines = 0
 
-        if reordered != '0' and reordered != '1':
-            num_removed_lines += 1
-            continue
+    with open(order_prod_filename, newline='') as ord_file:
+        ord_file = products.remove_header(ord_file)
+        ord_table = csv.reader(ord_file)
+        for row in ord_table:
+            prod_id = row[1]
+            reordered = row[3]
+            dept_id = int(prod_table[prod_id])
 
-        # Two lookups in the dictionary for each key
-        if dept_id in report_table:  # first lookup for all cases
-            dept_spec = report_table[dept_id]  # second lookup
-            dept_spec[0] += 1
-        else:
-            dept_spec = [1, 0, 0.0]
-            report_table[dept_id] = dept_spec  # second lookup
+            if reordered != '0' and reordered != '1':
+                num_ignored_lines += 1
+                continue
 
-        if reordered == '0':
-            dept_spec[1] += 1
+            # Two lookups in the dictionary for each key
+            if dept_id in report_table:  # first lookup for all cases
+                dept_spec = report_table[dept_id]  # second lookup
+                dept_spec[0] += 1
+            else:
+                dept_spec = [1, 0, 0.0]
+                report_table[dept_id] = dept_spec  # second lookup
 
-with open(report_filename, 'w') as report:
-    report.write('department_id,number_of_orders,\
+            if reordered == '0':
+                dept_spec[1] += 1
+
+    with open(report_filename, 'w') as report:
+        report.write('department_id,number_of_orders,\
 number_of_first_orders,percentage\n')
-    for key in sorted(report_table):
-        dept_row = report_table[key]
-        num_orders, num_first_orders = dept_row[0], dept_row[1]
-        percent = num_first_orders / num_orders
-        report.write(str(key) + ',' + str(num_orders) + ',' +
-                     str(num_first_orders) + ',' + format(percent, '.2f') +
-                     '\n')
+        for key in sorted(report_table):
+            dept_row = report_table[key]
+            num_orders, num_first_orders = dept_row[0], dept_row[1]
+            percent = num_first_orders / num_orders
+            report.write(str(key) + ',' + str(num_orders) + ',' +
+                         str(num_first_orders) + ',' + format(percent, '.2f') +
+                         '\n')
 
-print(num_removed_lines, 'lines removed from order_products table.')
+    print(num_ignored_lines, 'lines ignored from order_products table.')
+
+except IOError as msg:
+    print(msg)

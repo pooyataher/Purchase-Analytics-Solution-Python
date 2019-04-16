@@ -13,9 +13,11 @@ def remove_header(csvf):
         else:
             csvf.seek(0)
         return csvf
-    except csv.Error as msg:
-        print("Input files not in proper CSV format!", msg)
-        # raise
+    except csv.Error:
+        raise IOError('Input file not in proper CSV format')
+    # except csv.Error as msg:
+    #     print("Input files not in proper CSV format:", msg)
+    #     # raise
 
 
 def load_csv(fname, left, right):
