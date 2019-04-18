@@ -8,7 +8,7 @@ On a Linux machine, change directory to the main directory of this project and t
 
     ./run.sh
 	
-This reads the data files from `input` directory and writes a report file in the `output` directory.
+This reads the data files from `input` directory, analyzes them, and writes a report file in the `output` directory.
 
 ## Approach
 
