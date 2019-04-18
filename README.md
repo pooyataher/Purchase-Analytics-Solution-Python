@@ -12,11 +12,11 @@ This reads the data files from `input` directory and writes a report file in the
 
 ## Approach
 
-When thinking about how to solve this problem, we like to think of our three CSV files as tables.  So we have three tables;  two input tables which are order_products table and products table, and one report table.  To gain a clear understanding of our approach, we imagine each table containing only the fields required to tackle our specific problem. 
+When thinking about how to solve this problem, we like to think of our three CSV files as three tables;  two input tables which are order_products table and products table, and one report table.  To gain a clear understanding of our approach, we imagine each table containing only the fields required to tackle our specific problem. 
 
 ![three tables](tables.png)
 
-We first go over `order_products` table row by row, read the `product_id` and look for the `product_id` in `products` table.  We could do this the other way around, but we prefer to first go over the longer table *row by row* and then *search* in the shorter table.  Searching can be computationally expensive, so we prefer to search the shorter table rather then the longer one, although it comes at the cost of searching many more time (see [Scalability](README.md#scalability) section).  Notice that `order_products` table can have tens of millions of rows while `products` table tend to have no more than tens of thousands of rows.  Therefore, we will perform a high number of searches, but each search can be really fast.
+We first go over `order_products` table row by row, read the `product_id` and look for the `product_id` in `products` table.  We could do this the other way around, but we prefer to first go over the longer table *row by row* and then *search* in the shorter table.  Searching can be computationally expensive, so we prefer to search the shorter table rather then the longer, although it comes at the cost of searching many more time (see [Scalability](README.md#scalability) section).  Notice that `order_products` table can have tens of millions of rows while `products` table tend to have no more than tens of thousands of rows.  Therefore, we perform a high number of searches, but each search can be really fast.
 
 ## Algorithm
 
@@ -37,25 +37,25 @@ Before designing a bunch of data structures for each table, we tried to think of
 
 However, since each data structure is so simple (each has about a couple of instance variables), there seems to be no common attributes between them.  So we do *not* need to design a class hierarchy using an *abstract class*.  Instead, we directly used Python built-in data structures.
 
-We used a dictionary of `product_id: dept_id` pairs to represent the products table because we like to search any `product_id` as fast as possible.  We need to search the products table for potentially millions of `product_id` s (look at [Scalability](README.md#scalability) for a discussion on the tradeoff involved).
+We used a dictionary of `product_id: dept_id` pairs to represent the products table because we like to search any `product_id` as fast as possible.  We need to search the products table for a `product_id` for potentially millions of orders (look at [Scalability](README.md#scalability) for a discussion on the tradeoff involved).
 
-Similarly, as we need to search report table for millions of `dept_id` s, we use a dictionary of `dept_id: dept_spec` pairs to represent the report table, where `dept_spec` is a *list* of `number_of_orders`, `number_of_first_orders`, and `percentage`.
+Similarly, as we need to search report table for a `dept_id` for millions of orders, we use a dictionary of `dept_id: dept_spec` pairs to represent the report table, where `dept_spec` is a *list* of `number_of_orders`, `number_of_first_orders`, and `percentage`.
 
 ## Scalability
 
-Since there are no more than a couple of dozen departments, we can sort the report table based on `dept_id` really fast in the end--right before generating a report.  But as we create and update the report table, we need to search the report table many times -- once for each product of which there are tens of thousands.  So to reduce the time complexity of search, we better use a hash table for report table.  So we use a Python dictionary to store the report table.
+Since there are no more than a couple of dozen departments, we can sort the report table based on `dept_id` really fast in the end -- right before generating a report.  But as we create and update the report table, we need to search the report table many times -- once for each order of which there are tens of millions.  So to reduce the time complexity of search, we better use a hash table for report table.  So we use a Python dictionary to store the report table.
 
-We also use a Python dictionary to store the products table because for each order (of which there are tens of millions), we need to search for the `prod_id` in the products table which may contain tens of thousands of products.
+We also use a Python dictionary to store the products table because for each order (of which there are tens of millions), we need to search for the `product_id` in the products table which may contain tens of thousands of products.
 
 A Python dictionary uses hash map techniques to achieve (almost) constant time complexity, O(1), to search for a key (or a value).  That is, the search complexity would be (almost) independent of the number of elements in the dictionary.
 
-We used `str` keys in our dictionaries when possible because it leads to the fastest performance--according to this Python time complexity wiki [page](https://wiki.python.org/moin/TimeComplexity).
+We used `str` keys in our dictionaries when possible because it leads to the fastest performance -- according to [this wiki page on Python time complexity](https://wiki.python.org/moin/TimeComplexity).
 
-We could have read the shorter products table row by row and searched in the larger order_products table for all instances of each `prod_id`, but then each search could have been more time consuming as we may have had too many collisions in our underlying hash table, so we didn't use this approach.
+We could have read the *shorter* products table row by row and searched in the *larger* order_products table for all instances of each `product_id`, but then each search could have been more time consuming as we may have had too many collisions in our underlying hash table, so we didn't use this approach.
 
 ## Test
 
-*Integration test* had already been set up in `insight_testsuite/run_tests.sh`.  We modified the Bash file `run_tests.sh` to account for cases where we do *not* need our program to create an output report.  We also added more test cases in `insight_testsuite/tests/`.  We also wrote *unit tests* using the standard Python test framework `unittest`.
+*Integration test* was already set up in `insight_testsuite/run_tests.sh`.  We modified the Bash file `run_tests.sh` to account for cases where we do *not* require our program to create an output report.  We also added more test cases in `insight_testsuite/tests/`.  And finally, we wrote *unit tests* using the standard Python test framework `unittest`.
 
 ## Run Tests
 
@@ -69,4 +69,4 @@ To run *unit tests*, change directory to the main directory of the project and i
 
 ## Exception Handling
 
-The program strives to handle any type of missing or corrupt input data.  It will print messages in standard output if any such exception happens.  If only the `reordered` value is missing in the order_products table, then that entry is counted in the total number of orders for that product.
+The program strives to handle any type of missing or corrupt input data.  It will print messages in standard output if any such exception happens.  If only the `reordered` value is missing in the order_products table, then that entry is counted toward the total number of orders for that product, but it prints out a message that `number_of_first_orders` and `percentage` may *not* be accurate.
